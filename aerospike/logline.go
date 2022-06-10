@@ -27,18 +27,20 @@ func (a *Aerospike) LogLine(line string) (newline string, err error) {
 	}
 
 	// check for addr
-	var rr string
-	res = regexAddr.FindAllString(line, -1)
-	for _, r := range res {
-		if strings.Contains(r, ":") {
-			rr, err = a.Addr(r)
-		} else {
-			rr, err = a.IP(r)
+	if !strings.Contains(line, "<><><><><><><><>") {
+		var rr string
+		res = regexAddr.FindAllString(line, -1)
+		for _, r := range res {
+			if strings.Contains(r, ":") {
+				rr, err = a.Addr(r)
+			} else {
+				rr, err = a.IP(r)
+			}
+			if err != nil {
+				continue
+			}
+			line = strings.ReplaceAll(line, r, rr)
 		}
-		if err != nil {
-			continue
-		}
-		line = strings.ReplaceAll(line, r, rr)
 	}
 
 	// return
