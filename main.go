@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"sync"
+	"time"
 )
 
 func main() {
@@ -18,6 +19,7 @@ func main() {
 	input := flag.String("in", "", "name of input file; empty = stdin-pipe")
 	output := flag.String("out", "", "name of output file; empty = stdout")
 	mapout := flag.String("map", "", "name of file to output the mapping to; empty = stderr")
+	nsleep := flag.Duration("sleep", 0, "sleep between lines; e.g. 5us - 5 microseconds")
 	flag.Parse()
 
 	var k []byte
@@ -98,6 +100,9 @@ func main() {
 		_, err = out.WriteString(newline + "\n")
 		if err != nil {
 			log.Fatal(err)
+		}
+		if *nsleep != 0 {
+			time.Sleep(*nsleep)
 		}
 	}
 
